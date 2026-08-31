@@ -24,18 +24,6 @@ export interface Category {
   questions: Question[]
 }
 
-export type ViewName = 'home' | 'quiz' | 'result'
-
-export interface QuizState {
-  category: Category | null
-  questions: Question[]
-  currentIndex: number
-  selectedAnswerId: string | null
-  isAnswered: boolean
-  correctCount: number
-  answers: AnswerRecord[]
-}
-
 export interface AnswerRecord {
   questionId: string
   selectedAnswerId: string

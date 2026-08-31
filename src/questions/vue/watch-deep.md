@@ -34,8 +34,10 @@ obj.value.nested.value = 2
 
 ## Answer
 
-changed, changed
+changed (once)
 
 ## Explanation
 
-A `ref` wrapping an object is made deeply reactive by default, but `watch()` on a ref does not deeply invoke the callback unless `deep: true` is set. With `deep: true`, each nested mutation triggers the callback separately, so both assignments produce a log: `changed, changed`.
+With `{ deep: true }`, nested mutations inside the ref do trigger the watcher. However, both assignments run synchronously in the same tick, so Vue batches the callback — it fires once, not twice. Deep tracking detects each mutation, but the scheduler still deduplicates invocations within one flush cycle.
+
+See: [Watchers — Deep Watchers](https://vuejs.org/guide/essentials/watchers.html#deep-watchers) · [Callback Flush Timing](https://vuejs.org/guide/essentials/watchers.html#callback-flush-timing)

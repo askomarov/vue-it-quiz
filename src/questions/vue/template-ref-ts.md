@@ -6,7 +6,7 @@ difficulty: hard
 tags: [typescript, template-ref]
 ---
 
-##Question
+## Question
 
 How do you type a template ref in `<script setup lang="ts">` for a DOM element?
 

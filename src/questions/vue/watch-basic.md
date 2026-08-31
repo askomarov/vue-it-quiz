@@ -34,8 +34,10 @@ count.value = 2
 
 ## Answer
 
-0 -> 1, 1 -> 2
+0 -> 2
 
 ## Explanation
 
-By default, `watch()` is triggered synchronously whenever the watched ref changes. Each assignment to `count.value` triggers the callback separately, so both transitions are logged: first `0 -> 1`, then `1 -> 2`.
+Watcher callbacks are flushed asynchronously (pre-flush by default), not inline with the assignment. When two mutations happen in the same synchronous tick, Vue batches them into a single callback invocation with the final value — so only `0 -> 2` is logged. To get both transitions, the changes must happen in separate ticks (e.g. with `await nextTick()` between them).
+
+See: [Watchers — Callback Flush Timing](https://vuejs.org/guide/essentials/watchers.html#callback-flush-timing)

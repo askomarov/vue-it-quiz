@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useQuiz } from '../composables/useQuiz'
+
+const props = defineProps<{
+  categoryId: string
+}>()
+
+const router = useRouter()
 
 const {
   currentCategory,
@@ -12,9 +19,15 @@ const {
   exitQuiz,
 } = useQuiz()
 
-const emit = defineEmits<{
-  (e: 'home'): void
-}>()
+onMounted(() => {
+  if (
+    !currentCategory.value ||
+    currentCategory.value.id !== props.categoryId ||
+    totalQuestions.value === 0
+  ) {
+    router.replace(`/category/${props.categoryId}`)
+  }
+})
 
 const scoreColor = computed(() => {
   if (scorePercent.value >= 80) return 'text-emerald-500'
@@ -40,9 +53,14 @@ const dashOffset = computed(
   () => circumference - (scorePercent.value / 100) * circumference
 )
 
+function handleTryAgain() {
+  resetQuiz()
+  router.push(`/category/${props.categoryId}/quiz`)
+}
+
 function handleHome() {
   exitQuiz()
-  emit('home')
+  router.push('/')
 }
 </script>
 
@@ -58,7 +76,6 @@ function handleHome() {
         {{ scoreLabel }}
       </h1>
 
-      <!-- Score ring -->
       <div class="mb-8 flex justify-center">
         <div class="relative h-36 w-36">
           <svg class="h-full w-full -rotate-90" viewBox="0 0 120 120">
@@ -88,7 +105,6 @@ function handleHome() {
         </div>
       </div>
 
-      <!-- Stats -->
       <div class="mb-8 grid grid-cols-2 gap-4">
         <div class="rounded-xl bg-emerald-50 p-4 dark:bg-emerald-900/20">
           <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
@@ -108,12 +124,11 @@ function handleHome() {
         You answered {{ correctCount }} out of {{ totalQuestions }} questions correctly.
       </p>
 
-      <!-- Actions -->
       <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
         <button
           type="button"
           class="rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 dark:focus-visible:ring-offset-slate-800"
-          @click="resetQuiz"
+          @click="handleTryAgain"
         >
           Try Again
         </button>

@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
 import { categories, getTotalQuestionCount } from '../lib/questionLoader'
-import type { Category } from '../types'
 
-const emit = defineEmits<{
-  (e: 'start', category: Category): void
-}>()
-
+const router = useRouter()
 const totalQuestions = computed(() => getTotalQuestionCount())
 
 const iconPaths: Record<string, string> = {
@@ -28,18 +25,21 @@ const difficultyColors: Record<string, string> = {
   hard: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
 }
 
-function countByDifficulty(questions: Category['questions']) {
+function countByDifficulty(questions: (typeof categories)[number]['questions']) {
   return {
     easy: questions.filter((q) => q.difficulty === 'easy').length,
     medium: questions.filter((q) => q.difficulty === 'medium').length,
     hard: questions.filter((q) => q.difficulty === 'hard').length,
   }
 }
+
+function startQuiz(categoryId: string) {
+  router.push(`/category/${categoryId}/quiz`)
+}
 </script>
 
 <template>
   <div class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-    <!-- Hero -->
     <div class="mb-12 text-center">
       <h1
         class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl"
@@ -50,18 +50,27 @@ function countByDifficulty(questions: Category['questions']) {
         Test your knowledge across different IT domains. Pick a category and start
         answering questions.
       </p>
-      <div
-        class="mt-6 inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
-      >
-        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-        {{ categories.length }} categories · {{ totalQuestions }} questions ready
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div
+          class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+        >
+          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+          {{ categories.length }} categories · {{ totalQuestions }} questions ready
+        </div>
+        <RouterLink
+          to="/sandbox"
+          target="_blank"
+          class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-sky-300 hover:text-sky-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-sky-500 dark:hover:text-sky-400"
+        >
+          Vue 3 Sandbox
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </RouterLink>
       </div>
     </div>
 
-    <!-- Category cards -->
-    <div
-      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-    >
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="cat in categories"
         :key="cat.id"
@@ -92,11 +101,12 @@ function countByDifficulty(questions: Category['questions']) {
           </span>
         </div>
 
-        <h2
-          class="mb-2 text-xl font-semibold text-slate-900 dark:text-white"
+        <RouterLink
+          :to="`/category/${cat.id}`"
+          class="mb-2 text-xl font-semibold text-slate-900 transition-colors hover:text-sky-600 dark:text-white dark:hover:text-sky-400"
         >
           {{ cat.name }}
-        </h2>
+        </RouterLink>
         <p class="mb-4 flex-grow text-sm text-slate-600 dark:text-slate-400">
           {{ cat.description }}
         </p>
@@ -129,7 +139,7 @@ function countByDifficulty(questions: Category['questions']) {
           type="button"
           :disabled="cat.questions.length === 0"
           class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 dark:focus-visible:ring-offset-slate-800"
-          @click="emit('start', cat)"
+          @click="startQuiz(cat.id)"
         >
           Start Quiz
         </button>

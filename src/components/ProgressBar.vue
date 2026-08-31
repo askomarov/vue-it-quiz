@@ -4,6 +4,17 @@ defineProps<{
   current?: number
   total?: number
 }>()
+
+import { reactive, toRef } from 'vue'
+
+const state = reactive({ count: 0 })
+const countRef = toRef(state, 'count')
+
+state.count = 5
+console.log(countRef.value)
+
+countRef.value = 10
+console.log(state.count)
 </script>
 
 <template>
@@ -16,16 +27,17 @@ defineProps<{
       <span>{{ percent }}%</span>
     </div>
     <div
-      class="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
-      role="progressbar"
-      :aria-valuenow="percent"
-      aria-valuemin="0"
-      aria-valuemax="100"
+      class="relative h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
     >
-      <div
-        class="h-full rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 transition-all duration-500 ease-out"
+      <span
+        class="relative block h-full overflow-hidden transition-all duration-500 ease-out"
         :style="{ width: `${percent}%` }"
-      ></div>
+      >
+        <span
+          class="absolute inset-y-0 left-0 h-full rounded-full bg-linear-to-r from-red-400 via-yellow-400 to-green-700"
+          :style="{ width: percent ? `calc(100% * 100 / ${percent})` : '0' }"
+        />
+      </span>
     </div>
   </div>
 </template>

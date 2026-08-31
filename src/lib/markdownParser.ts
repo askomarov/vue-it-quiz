@@ -87,7 +87,11 @@ function extractSections(body: string): ParsedSections {
 }
 
 function markdownToHtml(markdown: string): string {
-  return parse(markdown, { async: false }) as string
+  const html = parse(markdown, { async: false }) as string
+  return html.replace(
+    /<a href="(https?:\/\/[^"]+)"/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer"'
+  )
 }
 
 let questionIdCounter = 0

@@ -2,35 +2,42 @@
 category: Vue 3
 description: Composition API, reactivity, TypeScript integration, and internals
 icon: layout
-difficulty: hard
+difficulty: medium
 tags: [watch, once]
 ---
 
 ## Question
 
-How can you make a watcher fire only once and then automatically stop itself?
+What will be logged to the console?
 
 ## Code
 
 ```typescript
 import { ref, watch } from 'vue'
 
-const data = ref(0)
+const count = ref(0)
 
-// How to watch data only once?
+watch(count, (val) => {
+  console.log(val)
+}, { once: true })
+
+count.value = 1
+count.value = 2
 ```
 
 ## Options
 
-- Pass { once: true } in the options
-- Use the returned stop function to stop it inside the callback
-- Use watchOnce() instead of watch()
-- Pass { count: 1 } in the options
+- 2
+- 1
+- 1, 2
+- Nothing is logged
 
 ## Answer
 
-Use the returned stop function to stop it inside the callback
+2
 
 ## Explanation
 
-`watch()` returns a stop function. To fire only once, call it inside the callback: `const stop = watch(data, () => { console.log('once'); stop() })`. Vue 3.4+ also supports the `{ once: true }` option which does this automatically, but the manual stop approach works in all versions.
+With `{ once: true }` (Vue 3.4+), the callback runs only once, then the watcher stops. Both assignments happen in the same synchronous tick, so Vue batches them: the single callback fires with the final value `2`, not the intermediate `1`. Without `immediate: true`, the initial value `0` does not trigger the callback.
+
+See: [Watchers — Once Watchers](https://vuejs.org/guide/essentials/watchers.html#once-watchers)

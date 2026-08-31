@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useQuiz } from '../composables/useQuiz'
+import { getCategoryById } from '../lib/questionLoader'
+import { stageSandboxCode } from '../lib/sandboxNavigation'
 import type { QuestionOption } from '../types'
 import CodeBlock from './CodeBlock.vue'
 import ProgressBar from './ProgressBar.vue'
+
+const props = defineProps<{
+  categoryId: string
+}>()
+
+const route = useRoute()
+const router = useRouter()
 
 const {
   currentCategory,
@@ -14,22 +24,49 @@ const {
   isAnswered,
   isLastQuestion,
   progressPercent,
+  quizQuestions,
+  startQuiz,
   selectAnswer,
   submitAnswer,
   nextQuestion,
   exitQuiz,
 } = useQuiz()
 
-const emit = defineEmits<{
-  (e: 'finish'): void
-  (e: 'home'): void
-}>()
+function ensureQuizStarted() {
+  const category = getCategoryById(props.categoryId)
+  if (!category) {
+    router.replace('/')
+    return
+  }
+
+  if (currentCategory.value?.id !== props.categoryId || quizQuestions.value.length === 0) {
+    startQuiz(category)
+  }
+}
+
+onMounted(ensureQuizStarted)
+
+watch(
+  () => route.params.categoryId,
+  () => ensureQuizStarted(),
+)
 
 const canSubmit = computed(() => selectedAnswerId.value !== null && !isAnswered.value)
 
+const canOpenSandbox = computed(
+  () =>
+    currentCategory.value?.name === 'Vue 3' &&
+    Boolean(currentQuestion.value?.code),
+)
+
+function handleOpenSandbox() {
+  if (!currentQuestion.value?.code) return
+  stageSandboxCode(currentQuestion.value.code)
+}
+
 function handleNext() {
   if (isAnswered.value && isLastQuestion.value) {
-    emit('finish')
+    router.push(`/category/${props.categoryId}/result`)
   } else {
     nextQuestion()
   }
@@ -37,7 +74,7 @@ function handleNext() {
 
 function handleExit() {
   exitQuiz()
-  emit('home')
+  router.push(`/category/${props.categoryId}`)
 }
 
 function optionClasses(opt: QuestionOption): string {
@@ -122,11 +159,25 @@ function indicatorClasses(opt: QuestionOption): string {
         v-html="currentQuestion.question"
       ></div>
 
-      <CodeBlock
-        v-if="currentQuestion.code"
-        :code="currentQuestion.code"
-        :language="currentQuestion.codeLanguage"
-      />
+      <div v-if="currentQuestion.code" class="space-y-2">
+        <CodeBlock
+          :code="currentQuestion.code"
+          :language="currentQuestion.codeLanguage"
+        />
+        <a
+          v-if="canOpenSandbox"
+          href="/sandbox"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-sky-300 hover:text-sky-700 dark:border-slate-600 dark:text-slate-300 dark:hover:border-sky-500 dark:hover:text-sky-400"
+          @click="handleOpenSandbox"
+        >
+          Open in sandbox
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </div>
 
       <!-- Options -->
     <div class="mt-6 space-y-3">
@@ -208,7 +259,7 @@ function indicatorClasses(opt: QuestionOption): string {
       </div>
       <!-- eslint-disable vue/no-v-html -->
       <div
-        class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 [&_code]:rounded [&_code]:bg-slate-200 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:font-mono dark:[&_code]:bg-slate-800"
+        class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 [&_a]:font-medium [&_a]:text-emerald-600 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-emerald-700 dark:[&_a]:text-emerald-400 dark:hover:[&_a]:text-emerald-300 [&_code]:rounded [&_code]:bg-slate-200 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:font-mono dark:[&_code]:bg-slate-800"
         v-html="currentQuestion.explanation"
       ></div>
     </div>

@@ -36,8 +36,10 @@ b.value = 20
 
 ## Answer
 
-Logs: sum: 12, then sum: 22
+Logs: sum: 22 (once)
 
 ## Explanation
 
-When a getter function is passed as the watch source, Vue tracks all reactive dependencies accessed inside it. When `a` changes to 2, the getter returns `2 + 10 = 12`. When `b` changes to 20, the getter returns `2 + 20 = 22`. Both changes trigger the callback with the new return value.
+When a getter function is passed as the watch source, Vue tracks all reactive dependencies accessed inside it. Here both `a` and `b` are dependencies. Since both refs change synchronously in the same tick, Vue batches the callback into a single invocation with the final computed value `2 + 20 = 22`. Separate logs (`sum: 12`, then `sum: 22`) would only appear if the changes occurred in different flush cycles.
+
+See: [Watchers — Watch Source Types](https://vuejs.org/guide/essentials/watchers.html#watch-source-types) · [Callback Flush Timing](https://vuejs.org/guide/essentials/watchers.html#callback-flush-timing)

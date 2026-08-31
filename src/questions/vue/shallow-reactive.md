@@ -36,8 +36,10 @@ console.log(triggered)
 
 ## Answer
 
-0, 1
+0, 0
 
 ## Explanation
 
-`shallowReactive()` only makes the top-level properties reactive — nested objects are not wrapped in proxies. So mutating `state.user.name` does not trigger reactivity (logs `0`). But replacing `state.user` entirely is a top-level property change, so the watcher fires (logs `1`).
+Two things are happening here. First, `shallowReactive()` only tracks top-level property changes — mutating `state.user.name` does not trigger reactivity. Second, `console.log(triggered)` runs synchronously right after each mutation, but watcher callbacks are flushed asynchronously. Even the valid trigger (replacing `state.user`) has not fired yet at the time of either `console.log`, so both output `0`.
+
+See: [shallowReactive()](https://vuejs.org/api/reactivity-advanced.html#shallowreactive) · [Watchers — Callback Flush Timing](https://vuejs.org/guide/essentials/watchers.html#callback-flush-timing)
