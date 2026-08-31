@@ -1,0 +1,109 @@
+title: "[Question] "
+labels: ["needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Fill in all fields below.
+
+        **Important:** the correct answer must **exactly match** one of the options (case-insensitive).
+
+        Example: [ref-value.md](https://github.com/askomarov/vue-it-quiz/blob/main/src/questions/vue/ref-value.md)
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Vue 3
+        - Frontend
+        - Backend
+        - Git
+        - Database
+        - DevOps
+    validations:
+      required: true
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty
+      options:
+        - easy
+        - medium
+        - hard
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Question text (markdown supported)
+      placeholder: What does `ref()` return, and how do you access its value?
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code (optional)
+      description: Code without ``` wrappers — we'll add them
+      render: text
+      placeholder: |
+        const count = ref(0)
+        console.log(count)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: code_language
+    attributes:
+      label: Code language (if code provided)
+      options:
+        - ""
+        - javascript
+        - typescript
+        - vue
+        - html
+        - css
+        - sql
+        - bash
+    validations:
+      required: false
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options
+      description: One option per line, starting with `- `
+      placeholder: |
+        - A plain value; access it directly
+        - An object with a `.value` property; access via `.value`
+        - A function; call it to get the value
+    validations:
+      required: true
+
+  - type: input
+    id: answer
+    attributes:
+      label: Correct Answer
+      description: Must exactly match one of the options above
+    validations:
+      required: true
+
+  - type: textarea
+    id: explanation
+    attributes:
+      label: Explanation
+      description: Why this answer is correct + link to docs (markdown supported)
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: Tags (optional)
+      description: Comma-separated, e.g. reactivity, ref
+    validations:
+      required: false

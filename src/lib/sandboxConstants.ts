@@ -11,4 +11,4 @@ count.value = 1
 console.log('count:', count.value)
 `
 
-export const SANDBOX_DEFAULT_TEMPLATE = '<h2>Пробуй вживую</h2>'
+export const SANDBOX_DEFAULT_TEMPLATE = '<h2>Vue 3 Sandbox</h2>'
