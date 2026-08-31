@@ -37,7 +37,6 @@ const CATEGORY_META = {
 }
 
 const FIELD_LABELS = {
-  fileName: 'File name (optional)',
   category: 'Category',
   difficulty: 'Difficulty',
   question: 'Question',
@@ -98,27 +97,15 @@ function compactSlug(text, maxWords = 5, maxLength = 40) {
     .slice(0, maxLength)
 }
 
-function buildFileSlug(title, fileName, question, discussionNumber) {
-  const sources = [
-    stripMarkdown(title).replace(/^\[question\]\s*/i, '').trim(),
-    fileName?.trim(),
-  ].filter(Boolean)
+function buildFileSlug(title) {
+  const cleanTitle = stripMarkdown(title).replace(/^\[question\]\s*/i, '').trim()
+  const slug = compactSlug(cleanTitle)
 
-  for (const source of sources) {
-    const slug = compactSlug(source)
-    if (slug.length >= 2) return slug
-  }
+  if (slug.length >= 2) return slug
 
-  const safeQuestion = question || ''
-  const codeRefs = [...safeQuestion.matchAll(/`([^`]+)`/g)].map((match) => match[1])
-  const refSlug = codeRefs
-    .map((ref) => compactSlug(ref, 3, 30))
-    .filter((slug) => slug.length >= 2)
-    .sort((a, b) => a.length - b.length)[0]
-
-  if (refSlug) return refSlug
-
-  return `question-${discussionNumber}`
+  throw new Error(
+    'Could not derive file name from discussion title. Set title to e.g. [Question] ref-value'
+  )
 }
 
 function normalizeOptions(raw) {
@@ -227,7 +214,6 @@ function main() {
 
   const sections = parseDiscussionBody(body)
   const fields = {
-    fileName: sections[FIELD_LABELS.fileName] ?? sections['File name'],
     category: sections[FIELD_LABELS.category],
     difficulty: sections[FIELD_LABELS.difficulty],
     question: sections[FIELD_LABELS.question],
@@ -255,7 +241,7 @@ function main() {
   }
 
   const { folder, content } = buildQuestionMarkdown(fields)
-  const baseSlug = buildFileSlug(title, fields.fileName, fields.question, discussionNumber)
+  const baseSlug = buildFileSlug(title)
   const filePath = resolveOutputPath(folder, baseSlug, discussionNumber)
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true })

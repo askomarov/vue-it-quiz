@@ -8,18 +8,10 @@ body:
 
         **Important:** the correct answer must **exactly match** one of the options (case-insensitive).
 
-        Set the **discussion title** above to a short topic, e.g. `[Question] ref-value`.
+        Set the **discussion title** above to a short topic — it becomes the file name.
+        Example: `[Question] ref-value` → `ref-value.md`
 
-        Example: [ref-value.md](https://github.com/askomarov/vue-it-quiz/blob/main/src/questions/vue/ref-value.md)
-
-  - type: input
-    id: file_name
-    attributes:
-      label: File name (optional)
-      description: Override for the `.md` file name if the discussion title is empty. Example ref-value
-      placeholder: ref-value
-    validations:
-      required: false
+        Example question: [ref-value.md](https://github.com/askomarov/vue-it-quiz/blob/main/src/questions/vue/ref-value.md)
 
   - type: dropdown
     id: category
