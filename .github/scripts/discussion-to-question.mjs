@@ -37,6 +37,7 @@ const CATEGORY_META = {
 }
 
 const FIELD_LABELS = {
+  fileName: 'File name',
   category: 'Category',
   difficulty: 'Difficulty',
   question: 'Question',
@@ -83,22 +84,36 @@ function tokenizeForSlug(text) {
     .replace(/^-+|-+$/g, '')
 }
 
-function buildFileSlug(title, question, discussionNumber) {
-  const cleanTitle = stripMarkdown(title).replace(/^\[question\]\s*/i, '').trim()
+function compactSlug(text, maxWords = 5, maxLength = 40) {
+  const slug = tokenizeForSlug(text)
+  if (!slug) return ''
 
-  if (cleanTitle) {
-    const titleSlug = tokenizeForSlug(cleanTitle)
-    if (titleSlug.length >= 2) return titleSlug.slice(0, 60)
+  return slug
+    .split('-')
+    .filter(Boolean)
+    .slice(0, maxWords)
+    .join('-')
+    .slice(0, maxLength)
+}
+
+function buildFileSlug(title, fileName, question, discussionNumber) {
+  const sources = [
+    stripMarkdown(title).replace(/^\[question\]\s*/i, '').trim(),
+    fileName,
+  ]
+
+  for (const source of sources) {
+    const slug = compactSlug(source)
+    if (slug.length >= 2) return slug
   }
 
   const codeRefs = [...question.matchAll(/`([^`]+)`/g)].map((match) => match[1])
-  for (const ref of codeRefs) {
-    const refSlug = tokenizeForSlug(ref)
-    if (refSlug.length >= 2) return refSlug.slice(0, 60)
-  }
+  const refSlug = codeRefs
+    .map((ref) => compactSlug(ref, 3, 30))
+    .filter((slug) => slug.length >= 2)
+    .sort((a, b) => a.length - b.length)[0]
 
-  const questionSlug = tokenizeForSlug(question.split('\n')[0])
-  if (questionSlug.length >= 2) return questionSlug.slice(0, 60)
+  if (refSlug) return refSlug
 
   return `question-${discussionNumber}`
 }
@@ -209,6 +224,7 @@ function main() {
 
   const sections = parseDiscussionBody(body)
   const fields = {
+    fileName: sections[FIELD_LABELS.fileName],
     category: sections[FIELD_LABELS.category],
     difficulty: sections[FIELD_LABELS.difficulty],
     question: sections[FIELD_LABELS.question],
@@ -236,7 +252,7 @@ function main() {
   }
 
   const { folder, content } = buildQuestionMarkdown(fields)
-  const baseSlug = buildFileSlug(title, fields.question, discussionNumber)
+  const baseSlug = buildFileSlug(title, fields.fileName, fields.question, discussionNumber)
   const filePath = resolveOutputPath(folder, baseSlug, discussionNumber)
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
