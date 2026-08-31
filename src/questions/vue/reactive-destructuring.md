@@ -36,3 +36,5 @@ console.log(count, label)
 ## Explanation
 
 Destructuring a `reactive()` object breaks reactivity — the destructured variables are plain copies of the values at the time of destructuring. After `state.count = 10`, the local `count` variable still holds the original value `0`. To preserve reactivity, use `toRefs()` before destructuring.
+
+See: [Reactivity Fundamentals — Limitations of reactive()](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#limitations-of-reactive)

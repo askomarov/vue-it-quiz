@@ -38,3 +38,5 @@ The callback runs after the DOM is updated
 ## Explanation
 
 By default, `watch()` callbacks run before the component updates the DOM (`flush: 'pre'`). With `flush: 'post'`, the callback is deferred until after Vue has flushed the DOM updates, so you can access the updated DOM inside the callback.
+
+See: [Watchers — Post Watchers](https://vuejs.org/guide/essentials/watchers.html#post-watchers)

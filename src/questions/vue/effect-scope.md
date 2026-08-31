@@ -24,3 +24,5 @@ It groups effects (watchers, computeds) so they can be stopped together
 ## Explanation
 
 `effectScope()` creates a scope object that collects all reactive effects created within it. Calling `scope.stop()` cleanly disposes all watchers, computeds, and watchEffects in that scope at once. This is especially useful in composables that create dynamic effects, allowing for clean teardown without tracking each effect individually.
+
+See: [effectScope()](https://vuejs.org/api/reactivity-advanced.html#effectscope)

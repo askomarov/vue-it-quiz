@@ -24,3 +24,5 @@ An object with a `.value` property; access via `.value`
 ## Explanation
 
 `ref()` returns a reactive object with a single `.value` property. In JavaScript you must access or mutate it through `.value`. In templates, Vue automatically unwraps refs so you can use the name directly without `.value`.
+
+See: [Reactivity Fundamentals — ref()](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#ref)

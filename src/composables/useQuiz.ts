@@ -1,8 +1,6 @@
 import { ref, computed } from 'vue'
 import type { Category, Question, AnswerRecord } from '../types'
 
-const QUESTIONS_PER_QUIZ = 10
-
 function shuffle<T>(array: T[]): T[] {
   const result = [...array]
   for (let i = result.length - 1; i > 0; i--) {
@@ -47,7 +45,7 @@ const incorrectCount = computed(
 
 function startQuiz(category: Category) {
   currentCategory.value = category
-  quizQuestions.value = shuffle(category.questions).slice(0, QUESTIONS_PER_QUIZ)
+  quizQuestions.value = shuffle(category.questions)
   currentIndex.value = 0
   selectedAnswerId.value = null
   isAnswered.value = false

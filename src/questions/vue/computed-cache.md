@@ -43,3 +43,5 @@ computed ran, (no log), computed ran
 ## Explanation
 
 Computed refs cache their result. The first access evaluates and logs `computed ran`. The second access returns the cached value without re-evaluating. After `firstName` changes, the cache is invalidated, so the third access re-evaluates and logs again. This is why computeds are more efficient than plain methods.
+
+See: [Computed Properties](https://vuejs.org/guide/essentials/computed.html)

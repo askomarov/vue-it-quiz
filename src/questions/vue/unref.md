@@ -36,3 +36,5 @@ console.log(unref(b))
 ## Explanation
 
 `unref()` is a helper that returns the inner value if the argument is a ref, or the argument itself if it is not. So `unref(a)` returns `42` (the ref's `.value`), and `unref(b)` returns `100` because `b` is a plain number, not a ref.
+
+See: [unref()](https://vuejs.org/api/reactivity-utilities.html#unref)

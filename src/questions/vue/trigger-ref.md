@@ -35,3 +35,5 @@ triggerRef(state)
 ## Explanation
 
 `triggerRef()` manually triggers the side effects (watchers, renders) associated with a `shallowRef`. After mutating the inner object, calling `triggerRef(state)` tells Vue that something changed, so any watchers or computed values depending on this ref re-evaluate.
+
+See: [triggerRef()](https://vuejs.org/api/reactivity-advanced.html#triggerref)

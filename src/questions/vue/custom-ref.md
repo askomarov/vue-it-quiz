@@ -24,3 +24,5 @@ Create a ref with custom get and set logic
 ## Explanation
 
 `customRef()` lets you define your own dependency tracking (track) and triggering (trigger) logic inside a factory function. This is useful for advanced cases like debounced refs, refs backed by localStorage, or refs that transform values on get/set.
+
+See: [customRef()](https://vuejs.org/api/reactivity-advanced.html#customref)

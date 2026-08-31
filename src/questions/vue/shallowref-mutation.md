@@ -29,13 +29,15 @@ state.value = { count: 2 }
 
 - watcher triggered, watcher triggered
 - watcher triggered
-- watcher triggered (only after the second line)
 - Nothing is logged
+- watcher triggered, then watcher triggered again
 
 ## Answer
 
-watcher triggered (only after the second line)
+watcher triggered
 
 ## Explanation
 
 `shallowRef()` only triggers reactivity when `.value` itself is replaced — it does not deeply track mutations to the inner object. So `state.value.count = 1` does NOT trigger the watcher. Only `state.value = { count: 2 }` (replacing the entire `.value`) triggers it once.
+
+See: [shallowRef()](https://vuejs.org/api/reactivity-advanced.html#shallowref)

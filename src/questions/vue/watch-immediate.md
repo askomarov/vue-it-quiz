@@ -38,3 +38,5 @@ new: 10, old: undefined, then new: 20, old: 10
 ## Explanation
 
 With `immediate: true`, the watcher fires immediately upon registration. On this first run, `oldVal` is `undefined` because there is no previous value — so it logs `new: 10, old: undefined`. Then when `count.value` changes to 20, it fires again with `new: 20, old: 10`.
+
+See: [Watchers — Eager Watchers](https://vuejs.org/guide/essentials/watchers.html#eager-watchers)

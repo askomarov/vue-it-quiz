@@ -24,3 +24,5 @@ onMounted()
 ## Explanation
 
 `onMounted()` is the Composition API equivalent of the `mounted` Options API hook. It fires after the component's DOM has been mounted. You register it inside `setup()` (or `<script setup>`) by passing a callback.
+
+See: [onMounted()](https://vuejs.org/api/composition-api-lifecycle.html#onmounted)

@@ -24,3 +24,5 @@ Permanently prevents an object from being made reactive
 ## Explanation
 
 `markRaw()` marks an object so that Vue will never make it reactive, even if it is nested inside a `reactive()` or `ref()`. This is useful for large, immutable data structures (like class instances, Three.js objects, or large arrays) where deep reactivity adds unnecessary overhead and can cause performance issues.
+
+See: [markRaw()](https://vuejs.org/api/reactivity-advanced.html#markraw)

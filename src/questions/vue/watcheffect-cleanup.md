@@ -35,3 +35,5 @@ It registers a cleanup function that runs before the next re-run or when the eff
 ## Explanation
 
 `onCleanup` registers a callback that Vue calls before the effect re-runs (due to dependency changes) or when the effect is stopped (e.g., component unmount). This is the standard pattern for cleaning up side effects like timers, event listeners, or subscriptions created inside the effect.
+
+See: [Watchers — Side Effect Cleanup](https://vuejs.org/guide/essentials/watchers.html#side-effect-cleanup)

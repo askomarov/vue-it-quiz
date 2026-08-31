@@ -24,3 +24,5 @@ A ref that enables two-way binding between parent and child via v-model
 ## Explanation
 
 `defineModel()` returns a ref whose value is synced with the parent's `v-model` binding. Mutating the ref's `.value` automatically emits an `update:modelValue` event to the parent. It eliminates the need to manually pair a `prop` with an `emit` for two-way binding.
+
+See: [defineModel()](https://vuejs.org/api/sfc-script-setup.html#definemodel)

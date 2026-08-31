@@ -31,4 +31,6 @@ defineProps<{ title: string; count?: number }>()
 
 ## Explanation
 
-In `<script setup>` with TypeScript, `defineProps` accepts a generic type argument: `defineProps<{ title: string; count?: number }>()`. Vue's compiler extracts the type literal and generates runtime prop validation automatically. The `?` marks the prop as optional.
+In `<script setup>` with TypeScript, `defineProps` accepts a generic type argument for type-based declaration: `defineProps<{ title: string; count?: number }>()`. The compiler infers equivalent runtime prop options from the type, but this is not the same as a full runtime declaration with custom validators. The `?` marks the prop as optional.
+
+See: [TypeScript — Typing Component Props](https://vuejs.org/guide/typescript/composition-api.html#typing-component-props)

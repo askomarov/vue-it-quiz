@@ -37,3 +37,5 @@ Both are arrays: [number, string]
 ## Explanation
 
 When watching an array of sources, the callback receives arrays for both `newValues` and `oldValues`, in the same order as the sources. So `newValues` is `[number, string]` and `oldValues` is `[number, string]`. TypeScript infers the tuple type from the sources array.
+
+See: [Watchers — Watch Source Types](https://vuejs.org/guide/essentials/watchers.html#watch-source-types)

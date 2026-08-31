@@ -8,38 +8,31 @@ tags: [reactivity, shallowReactive]
 
 ## Question
 
-What will be logged?
+What will this code log?
 
 ## Code
 
 ```typescript
-import { shallowReactive, watch } from 'vue'
+import { shallowReactive, isReactive } from 'vue'
 
 const state = shallowReactive({ user: { name: 'Alice' } })
 
-let triggered = 0
-watch(() => state.user, () => triggered++)
-
-state.user.name = 'Bob'
-console.log(triggered)
-
-state.user = { name: 'Carol' }
-console.log(triggered)
+console.log(isReactive(state), isReactive(state.user))
 ```
 
 ## Options
 
-- 0, 0
-- 0, 1
-- 1, 1
-- 1, 2
+- true, true
+- true, false
+- false, true
+- false, false
 
 ## Answer
 
-0, 0
+true, false
 
 ## Explanation
 
-Two things are happening here. First, `shallowReactive()` only tracks top-level property changes — mutating `state.user.name` does not trigger reactivity. Second, `console.log(triggered)` runs synchronously right after each mutation, but watcher callbacks are flushed asynchronously. Even the valid trigger (replacing `state.user`) has not fired yet at the time of either `console.log`, so both output `0`.
+`shallowReactive()` makes only the root object reactive — nested objects are stored as-is without being wrapped in proxies. So `isReactive(state)` is `true`, but `isReactive(state.user)` is `false`. Mutations like `state.user.name = 'Bob'` change the data but do not trigger reactivity; replacing a top-level property like `state.user = { ... }` does.
 
-See: [shallowReactive()](https://vuejs.org/api/reactivity-advanced.html#shallowreactive) · [Watchers — Callback Flush Timing](https://vuejs.org/guide/essentials/watchers.html#callback-flush-timing)
+See: [shallowReactive()](https://vuejs.org/api/reactivity-advanced.html#shallowreactive)

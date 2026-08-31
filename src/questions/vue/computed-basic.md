@@ -36,3 +36,5 @@ console.log(double.value)
 ## Explanation
 
 `computed()` creates a reactive computed ref. When `count.value` changes to 5, `double.value` is lazily re-evaluated on next access and returns `5 * 2 = 10`. Computed values are cached and only recompute when their dependencies change.
+
+See: [Computed Properties](https://vuejs.org/guide/essentials/computed.html)

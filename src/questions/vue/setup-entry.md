@@ -8,19 +8,21 @@ tags: [composition-api, setup]
 
 ## Question
 
-Which function is the entry point of a component when using the Composition API in a `<script setup>` block?
+What does Vue compile a `<script setup>` block into?
 
 ## Options
 
-- created()
-- setup()
-- beforeCreate()
-- mounted()
+- A setup() function (same as explicit Composition API)
+- A created() lifecycle hook
+- A beforeCreate() lifecycle hook
+- A mounted() lifecycle hook
 
 ## Answer
 
-setup()
+A setup() function (same as explicit Composition API)
 
 ## Explanation
 
-The `setup()` function is the entry point of the Composition API. With `<script setup>`, the compiler automatically wraps the block's top-level bindings into a `setup()` function that runs once per component instance, before the component is created.
+You never write `setup()` yourself in `<script setup>` — the compiler transforms the entire block into a `setup()` function that runs once per component instance, before the component is created. Top-level bindings become local variables returned to the template.
+
+See: [Composition API — setup()](https://vuejs.org/api/composition-api-setup.html#setup)

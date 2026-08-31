@@ -8,19 +8,21 @@ tags: [reactivity, reactive]
 
 ## Question
 
-What is the difference between `ref()` and `reactive()`?
+What is the main practical difference between `ref()` and `reactive()`?
 
 ## Options
 
+- ref() wraps any value in a reactive .value; reactive() only works with objects
 - They are identical
-- ref() works with primitives, reactive() works with objects
 - ref() is async, reactive() is sync
 - reactive() works with primitives, ref() works with objects
 
 ## Answer
 
-ref() works with primitives, reactive() works with objects
+ref() wraps any value in a reactive .value; reactive() only works with objects
 
 ## Explanation
 
-`ref()` is primarily for primitives (though it also works with objects) and requires `.value` access. `reactive()` is for objects and arrays — it returns a proxy of the original object, so you access properties directly without `.value`. `reactive()` does not work with primitives.
+`ref()` can hold any value (primitives, objects, arrays) and is accessed via `.value`. `reactive()` only accepts objects/arrays and returns a deep proxy — properties are accessed directly without `.value`. `reactive()` cannot wrap primitives. Both work with objects, but `ref()` is more universal and avoids destructuring pitfalls.
+
+See: [Reactivity Fundamentals](https://vuejs.org/guide/essentials/reactivity-fundamentals.html)

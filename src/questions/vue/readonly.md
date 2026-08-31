@@ -24,3 +24,5 @@ Returns a read-only proxy that warns on mutation attempts
 ## Explanation
 
 `readonly()` returns a proxy of the original reactive object that allows reads but blocks writes. In development mode, attempting to mutate a readonly proxy logs a warning. It is useful for passing reactive state to child components while preventing them from modifying it.
+
+See: [readonly()](https://vuejs.org/api/reactivity-core.html#readonly)
