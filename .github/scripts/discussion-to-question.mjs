@@ -37,7 +37,7 @@ const CATEGORY_META = {
 }
 
 const FIELD_LABELS = {
-  fileName: 'File name',
+  fileName: 'File name (optional)',
   category: 'Category',
   difficulty: 'Difficulty',
   question: 'Question',
@@ -67,6 +67,8 @@ function parseDiscussionBody(body) {
 }
 
 function stripMarkdown(text) {
+  if (!text) return ''
+
   return text
     .replace(/`([^`]+)`/g, '$1')
     .replace(/\*\*([^*]+)\*\*/g, '$1')
@@ -99,15 +101,16 @@ function compactSlug(text, maxWords = 5, maxLength = 40) {
 function buildFileSlug(title, fileName, question, discussionNumber) {
   const sources = [
     stripMarkdown(title).replace(/^\[question\]\s*/i, '').trim(),
-    fileName,
-  ]
+    fileName?.trim(),
+  ].filter(Boolean)
 
   for (const source of sources) {
     const slug = compactSlug(source)
     if (slug.length >= 2) return slug
   }
 
-  const codeRefs = [...question.matchAll(/`([^`]+)`/g)].map((match) => match[1])
+  const safeQuestion = question || ''
+  const codeRefs = [...safeQuestion.matchAll(/`([^`]+)`/g)].map((match) => match[1])
   const refSlug = codeRefs
     .map((ref) => compactSlug(ref, 3, 30))
     .filter((slug) => slug.length >= 2)
@@ -224,7 +227,7 @@ function main() {
 
   const sections = parseDiscussionBody(body)
   const fields = {
-    fileName: sections[FIELD_LABELS.fileName],
+    fileName: sections[FIELD_LABELS.fileName] ?? sections['File name'],
     category: sections[FIELD_LABELS.category],
     difficulty: sections[FIELD_LABELS.difficulty],
     question: sections[FIELD_LABELS.question],
