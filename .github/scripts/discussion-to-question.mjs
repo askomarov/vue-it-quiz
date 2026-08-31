@@ -65,15 +65,42 @@ function parseDiscussionBody(body) {
   return sections
 }
 
-function slugify(text) {
-  return (
-    text
-      .toLowerCase()
-      .replace(/\[question\]\s*/gi, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '')
-      .slice(0, 60) || 'new-question'
-  )
+function stripMarkdown(text) {
+  return text
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .trim()
+}
+
+function tokenizeForSlug(text) {
+  return stripMarkdown(text)
+    .replace(/[()]/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+function buildFileSlug(title, question, discussionNumber) {
+  const cleanTitle = stripMarkdown(title).replace(/^\[question\]\s*/i, '').trim()
+
+  if (cleanTitle) {
+    const titleSlug = tokenizeForSlug(cleanTitle)
+    if (titleSlug.length >= 2) return titleSlug.slice(0, 60)
+  }
+
+  const codeRefs = [...question.matchAll(/`([^`]+)`/g)].map((match) => match[1])
+  for (const ref of codeRefs) {
+    const refSlug = tokenizeForSlug(ref)
+    if (refSlug.length >= 2) return refSlug.slice(0, 60)
+  }
+
+  const questionSlug = tokenizeForSlug(question.split('\n')[0])
+  if (questionSlug.length >= 2) return questionSlug.slice(0, 60)
+
+  return `question-${discussionNumber}`
 }
 
 function normalizeOptions(raw) {
@@ -209,7 +236,7 @@ function main() {
   }
 
   const { folder, content } = buildQuestionMarkdown(fields)
-  const baseSlug = slugify(title || fields.question)
+  const baseSlug = buildFileSlug(title, fields.question, discussionNumber)
   const filePath = resolveOutputPath(folder, baseSlug, discussionNumber)
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
