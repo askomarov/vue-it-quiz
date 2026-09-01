@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import UButton from '@ui/UButton/UButton.vue'
 import UBadge from '@ui/UBadge/UBadge.vue'
-import UExternalLink from '@ui/UExternalLink/UExternalLink.vue'
 import { categories, getTotalQuestionCount } from '@/lib/questionLoader'
 import { ADD_QUESTION_URL } from '@/lib/siteLinks'
 
