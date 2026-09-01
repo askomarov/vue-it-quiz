@@ -12,17 +12,21 @@ What will be logged to the console?
 
 ## Code
 
-```typescript
-import { ref, watch } from 'vue'
+```javascript
+import { ref, watch } from "vue";
 
-const count = ref(0)
+const count = ref(0);
 
-watch(count, (val) => {
-  console.log(val)
-}, { once: true })
+watch(
+  count,
+  (val) => {
+    console.log(val);
+  },
+  { once: true },
+);
 
-count.value = 1
-count.value = 2
+count.value = 1;
+count.value = 2;
 ```
 
 ## Options

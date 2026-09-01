@@ -12,21 +12,21 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { ref, computed } from 'vue'
+```javascript
+import { ref, computed } from "vue";
 
-const firstName = ref('John')
-const lastName = ref('Doe')
+const firstName = ref("John");
+const lastName = ref("Doe");
 
 const fullName = computed(() => {
-  console.log('computed ran')
-  return `${firstName.value} ${lastName.value}`
-})
+  console.log("computed ran");
+  return `${firstName.value} ${lastName.value}`;
+});
 
-console.log(fullName.value)
-console.log(fullName.value)
-firstName.value = 'Jane'
-console.log(fullName.value)
+console.log(fullName.value);
+console.log(fullName.value);
+firstName.value = "Jane";
+console.log(fullName.value);
 ```
 
 ## Options

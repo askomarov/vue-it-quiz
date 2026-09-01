@@ -1,19 +1,30 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { EditorState } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers } from '@codemirror/view'
 import { javascript } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 import { indentOnInput, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
+import { html } from '@codemirror/lang-html'
 
-const props = defineProps<{
-  modelValue: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    modelValue: string
+    language?: 'typescript' | 'html'
+  }>(),
+  { language: 'typescript' },
+)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
+
+const langExtension = computed(() =>
+  props.language === 'html'
+    ? html()
+    : javascript({ typescript: true }),
+)
 
 const containerRef = ref<HTMLDivElement | null>(null)
 let view: EditorView | null = null
@@ -30,7 +41,7 @@ function createEditor(initialDoc: string) {
         history(),
         indentOnInput(),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-        javascript({ typescript: true }),
+        langExtension.value,
         oneDark,
         keymap.of([...defaultKeymap, ...historyKeymap]),
         EditorView.lineWrapping,

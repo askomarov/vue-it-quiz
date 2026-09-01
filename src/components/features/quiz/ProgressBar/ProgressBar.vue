@@ -4,17 +4,6 @@ defineProps<{
   current?: number
   total?: number
 }>()
-
-import { reactive, toRef } from 'vue'
-
-const state = reactive({ count: 0 })
-const countRef = toRef(state, 'count')
-
-state.count = 5
-console.log(countRef.value)
-
-countRef.value = 10
-console.log(state.count)
 </script>
 
 <template>

@@ -12,15 +12,15 @@ What are the parameter types in the callback when watching multiple sources?
 
 ## Code
 
-```typescript
-import { ref, watch } from 'vue'
+```javascript
+import { ref, watch } from "vue";
 
-const a = ref(1)
-const b = ref('hello')
+const a = ref(1);
+const b = ref("hello");
 
 watch([a, b], (newValues, oldValues) => {
   // What are the types of newValues and oldValues?
-})
+});
 ```
 
 ## Options

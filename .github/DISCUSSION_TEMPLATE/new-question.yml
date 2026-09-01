@@ -11,7 +11,7 @@ body:
         Set the **discussion title** above to a short topic — it becomes the file name.
         Example: `[Question] ref-value` → `ref-value.md`
 
-        Example question: [ref-value.md](https://github.com/askomarov/vue-it-quiz/blob/main/src/questions/vue/ref-value.md)
+        Example question: [watch-deep.md](https://github.com/askomarov/vue-it-quiz/blob/main/src/questions/vue/watch-deep.md)
 
   - type: dropdown
     id: category

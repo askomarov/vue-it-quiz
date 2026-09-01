@@ -12,12 +12,12 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { shallowReactive, isReactive } from 'vue'
+```javascript
+import { shallowReactive, isReactive } from "vue";
 
-const state = shallowReactive({ user: { name: 'Alice' } })
+const state = shallowReactive({ user: { name: "Alice" } });
 
-console.log(isReactive(state), isReactive(state.user))
+console.log(isReactive(state), isReactive(state.user));
 ```
 
 ## Options

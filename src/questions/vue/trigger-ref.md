@@ -12,12 +12,12 @@ How can you force a `shallowRef`'s watcher to fire after mutating its inner obje
 
 ## Code
 
-```typescript
-import { shallowRef, triggerRef } from 'vue'
+```javascript
+import { shallowRef, triggerRef } from "vue";
 
-const state = shallowRef({ count: 0 })
+const state = shallowRef({ count: 0 });
 
-state.value.count = 5
+state.value.count = 5;
 // What goes here to trigger reactivity?
 ```
 

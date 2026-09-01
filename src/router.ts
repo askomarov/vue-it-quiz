@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import QuizLayout from './components/QuizLayout.vue'
-import HomeView from './components/HomeView.vue'
-import CategoryView from './components/CategoryView.vue'
-import QuestionView from './components/QuestionView.vue'
-import ResultView from './components/ResultView.vue'
-import SandboxView from './components/SandboxView.vue'
-import { getCategoryById } from './lib/questionLoader'
+import QuizLayout from '@layouts/QuizLayout/QuizLayout.vue'
+import HomeView from '@views/HomeView/HomeView.vue'
+import CategoryView from '@views/CategoryView/CategoryView.vue'
+import QuestionView from '@views/QuestionView/QuestionView.vue'
+import ResultView from '@views/ResultView/ResultView.vue'
+import SandboxView from '@features/sandbox/SandboxView/SandboxView.vue'
+import { getCategoryById } from '@/lib/questionLoader'
 
 export const router = createRouter({
   history: createWebHistory(),

@@ -12,17 +12,17 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { reactive, toRef } from 'vue'
+```javascript
+import { reactive, toRef } from "vue";
 
-const state = reactive({ count: 0 })
-const countRef = toRef(state, 'count')
+const state = reactive({ count: 0 });
+const countRef = toRef(state, "count");
 
-state.count = 5
-console.log(countRef.value)
+state.count = 5;
+console.log(countRef.value);
 
-countRef.value = 10
-console.log(state.count)
+countRef.value = 10;
+console.log(state.count);
 ```
 
 ## Options

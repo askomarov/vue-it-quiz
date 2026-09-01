@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import SandboxEditor from './SandboxEditor.vue'
-import SandboxConsole, { type ConsoleEntry } from './SandboxConsole.vue'
-import { compileSandboxCode } from '../lib/sandboxCompile'
-import { DEFAULT_SANDBOX_CODE, SANDBOX_STORAGE_KEY } from '../lib/sandboxConstants'
+import SandboxEditor from '@features/sandbox/SandboxEditor/SandboxEditor.vue'
+import SandboxConsole, { type ConsoleEntry } from '@features/sandbox/SandboxConsole/SandboxConsole.vue'
+import { compileSandboxCode } from '@/lib/sandboxCompile'
+import {
+  DEFAULT_SANDBOX_SCRIPT,
+  DEFAULT_SANDBOX_TEMPLATE,
+  SANDBOX_STORAGE_KEY,
+} from '@/lib/sandboxConstants'
 
-const code = ref(DEFAULT_SANDBOX_CODE)
+const script = ref(DEFAULT_SANDBOX_SCRIPT)
+const template = ref(DEFAULT_SANDBOX_TEMPLATE)
 const previewSrc = ref('')
 const consoleEntries = ref<ConsoleEntry[]>([])
 let nextEntryId = 0
@@ -37,7 +42,7 @@ function handleMessage(event: MessageEvent) {
 
 function runCode() {
   try {
-    previewSrc.value = compileSandboxCode(code.value)
+    previewSrc.value = compileSandboxCode(script.value, template.value)
   } catch (err) {
     addConsoleEntry('error', [err instanceof Error ? err.message : String(err)])
   }
@@ -49,20 +54,31 @@ function scheduleRun() {
 }
 
 function resetCode() {
-  code.value = DEFAULT_SANDBOX_CODE
+  script.value = DEFAULT_SANDBOX_SCRIPT
+  template.value = DEFAULT_SANDBOX_TEMPLATE
 }
 
 function clearConsole() {
   consoleEntries.value = []
 }
 
-onMounted(() => {
+function loadStoredCode() {
   const stored = localStorage.getItem(SANDBOX_STORAGE_KEY)
-  if (stored) {
-    code.value = stored
-    localStorage.removeItem(SANDBOX_STORAGE_KEY)
+  if (!stored) return
+
+  try {
+    const parsed = JSON.parse(stored) as { script?: string; template?: string }
+    if (parsed.script) script.value = parsed.script
+    if (parsed.template) template.value = parsed.template
+  } catch {
+    script.value = stored
   }
 
+  localStorage.removeItem(SANDBOX_STORAGE_KEY)
+}
+
+onMounted(() => {
+  loadStoredCode()
   window.addEventListener('message', handleMessage)
   runCode()
 })
@@ -72,7 +88,7 @@ onBeforeUnmount(() => {
   if (debounceTimer) clearTimeout(debounceTimer)
 })
 
-watch(code, scheduleRun)
+watch([script, template], scheduleRun)
 </script>
 
 <template>
@@ -109,11 +125,29 @@ watch(code, scheduleRun)
 
     <div class="flex min-h-0 flex-1 flex-col lg:flex-row">
       <section class="flex min-h-0 flex-1 flex-col border-b border-slate-700 lg:w-1/2 lg:border-b-0 lg:border-r">
-        <div class="border-b border-slate-700/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
-          Script
+        <div class="flex min-h-0 flex-1 flex-col border-b border-slate-700/50">
+          <div class="border-b border-slate-700/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+            Script
+          </div>
+          <div class="min-h-0 flex-1">
+            <SandboxEditor v-model="script" language="typescript" />
+          </div>
         </div>
-        <div class="min-h-0 flex-1">
-          <SandboxEditor v-model="code" />
+
+        <div class="flex min-h-0 flex-1 flex-col">
+          <div class="border-b border-slate-700/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+            Template
+          </div>
+          <div class="min-h-0 flex-1">
+            <SandboxEditor v-model="template" language="html" />
+          </div>
+          <p class="border-t border-slate-700/50 px-4 py-1.5 text-xs text-slate-500">
+            Template auto-binds
+            <code class="text-slate-400">ref</code>,
+            <code class="text-slate-400">reactive</code>,
+            <code class="text-slate-400">computed</code>
+            and handlers from script
+          </p>
         </div>
       </section>
 

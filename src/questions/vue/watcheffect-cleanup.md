@@ -12,13 +12,13 @@ What is the purpose of the `onCleanup` function provided inside `watchEffect`?
 
 ## Code
 
-```typescript
-import { watchEffect } from 'vue'
+```javascript
+import { watchEffect } from "vue";
 
 watchEffect((onCleanup) => {
-  const timer = setInterval(() => console.log('tick'), 1000)
-  onCleanup(() => clearInterval(timer))
-})
+  const timer = setInterval(() => console.log("tick"), 1000);
+  onCleanup(() => clearInterval(timer));
+});
 ```
 
 ## Options

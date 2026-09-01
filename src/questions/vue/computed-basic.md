@@ -12,14 +12,14 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { ref, computed } from 'vue'
+```javascript
+import { ref, computed } from "vue";
 
-const count = ref(0)
-const double = computed(() => count.value * 2)
+const count = ref(0);
+const double = computed(() => count.value * 2);
 
-count.value = 5
-console.log(double.value)
+count.value = 5;
+console.log(double.value);
 ```
 
 ## Options

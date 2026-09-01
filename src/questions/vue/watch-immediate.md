@@ -12,16 +12,20 @@ What will this code output?
 
 ## Code
 
-```typescript
-import { ref, watch } from 'vue'
+```javascript
+import { ref, watch } from "vue";
 
-const count = ref(10)
+const count = ref(10);
 
-watch(count, (newVal, oldVal) => {
-  console.log(`new: ${newVal}, old: ${oldVal}`)
-}, { immediate: true })
+watch(
+  count,
+  (newVal, oldVal) => {
+    console.log(`new: ${newVal}, old: ${oldVal}`);
+  },
+  { immediate: true },
+);
 
-count.value = 20
+count.value = 20;
 ```
 
 ## Options

@@ -12,13 +12,13 @@ Why is `toRefs()` commonly used when returning from a composable that returns a 
 
 ## Code
 
-```typescript
-import { reactive, toRefs } from 'vue'
+```javascript
+import { reactive, toRefs } from "vue";
 
 function useCounter() {
-  const state = reactive({ count: 0, step: 1 })
+  const state = reactive({ count: 0, step: 1 });
   // ...
-  return toRefs(state)
+  return toRefs(state);
 }
 ```
 

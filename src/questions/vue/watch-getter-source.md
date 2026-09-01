@@ -12,19 +12,19 @@ What happens when you pass a getter function as the source to `watch()`?
 
 ## Code
 
-```typescript
-import { ref, watch } from 'vue'
+```javascript
+import { ref, watch } from "vue";
 
-const a = ref(1)
-const b = ref(10)
+const a = ref(1);
+const b = ref(10);
 
 watch(
   () => a.value + b.value,
-  (sum) => console.log(`sum: ${sum}`)
-)
+  (sum) => console.log(`sum: ${sum}`),
+);
 
-a.value = 2
-b.value = 20
+a.value = 2;
+b.value = 20;
 ```
 
 ## Options

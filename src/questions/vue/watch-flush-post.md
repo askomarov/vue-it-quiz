@@ -12,16 +12,20 @@ What happens when you set `flush: 'post'` in a watcher's options?
 
 ## Code
 
-```typescript
-import { ref, watch } from 'vue'
+```javascript
+import { ref, watch } from "vue";
 
-const data = ref(0)
+const data = ref(0);
 
-watch(data, () => {
-  console.log('DOM updated')
-}, { flush: 'post' })
+watch(
+  data,
+  () => {
+    console.log("DOM updated");
+  },
+  { flush: "post" },
+);
 
-data.value = 1
+data.value = 1;
 ```
 
 ## Options

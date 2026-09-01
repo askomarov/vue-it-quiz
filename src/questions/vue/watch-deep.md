@@ -12,17 +12,21 @@ What will be logged?
 
 ## Code
 
-```typescript
-import { ref, watch } from 'vue'
+```javascript
+import { ref, watch } from "vue";
 
-const obj = ref({ nested: { value: 0 } })
+const obj = ref({ nested: { value: 0 } });
 
-watch(obj, (newVal) => {
-  console.log('changed')
-}, { deep: true })
+watch(
+  obj,
+  (newVal) => {
+    console.log("changed");
+  },
+  { deep: true },
+);
 
-obj.value.nested.value = 1
-obj.value.nested.value = 2
+obj.value.nested.value = 1;
+obj.value.nested.value = 2;
 ```
 
 ## Options

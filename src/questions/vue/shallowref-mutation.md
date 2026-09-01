@@ -12,17 +12,17 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { shallowRef, watch } from 'vue'
+```javascript
+import { shallowRef, watch } from "vue";
 
-const state = shallowRef({ count: 0 })
+const state = shallowRef({ count: 0 });
 
 watch(state, () => {
-  console.log('watcher triggered')
-})
+  console.log("watcher triggered");
+});
 
-state.value.count = 1
-state.value = { count: 2 }
+state.value.count = 1;
+state.value = { count: 2 };
 ```
 
 ## Options

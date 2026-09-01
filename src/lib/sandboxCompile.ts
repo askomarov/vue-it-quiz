@@ -21,18 +21,107 @@ function rewriteVueImports(code: string): string {
   return result.trim()
 }
 
+const VUE_REACTIVE_CALLEES = new Set([
+  'ref',
+  'reactive',
+  'computed',
+  'shallowRef',
+  'shallowReactive',
+  'readonly',
+  'shallowReadonly',
+  'customRef',
+  'toRef',
+  'toRefs',
+])
+
+function getVueImportNames(code: string): Set<string> {
+  const names = new Set<string>()
+  const importPattern = /const\s*\{([^}]+)\}\s*=\s*Vue/g
+
+  for (const match of code.matchAll(importPattern)) {
+    for (const part of match[1].split(',')) {
+      const name = part.trim().split(/\s+as\s+/)[0]?.trim()
+      if (name) names.add(name)
+    }
+  }
+
+  return names
+}
+
+function hasExplicitReturn(code: string): boolean {
+  return /^\s*return\s/m.test(code)
+}
+
+function collectAutoReturnBindings(code: string, vueImports: Set<string>): string[] {
+  const bindings: string[] = []
+  const seen = new Set<string>()
+
+  for (const line of code.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('//')) continue
+
+    const reactiveMatch = trimmed.match(
+      /^(?:const|let|var)\s+(\w+)\s*=\s*(?:await\s+)?(\w+)\s*\(/,
+    )
+    if (reactiveMatch) {
+      const [, name, callee] = reactiveMatch
+      if (
+        name &&
+        callee &&
+        VUE_REACTIVE_CALLEES.has(callee) &&
+        !vueImports.has(name) &&
+        !seen.has(name)
+      ) {
+        bindings.push(name)
+        seen.add(name)
+      }
+      continue
+    }
+
+    const fnMatch = trimmed.match(/^function\s+(\w+)\s*\(/)
+    if (fnMatch?.[1] && !vueImports.has(fnMatch[1]) && !seen.has(fnMatch[1])) {
+      bindings.push(fnMatch[1])
+      seen.add(fnMatch[1])
+      continue
+    }
+
+    const arrowMatch = trimmed.match(
+      /^(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:\([^)]*\)|\w+)\s*=>/,
+    )
+    if (arrowMatch?.[1] && !vueImports.has(arrowMatch[1]) && !seen.has(arrowMatch[1])) {
+      bindings.push(arrowMatch[1])
+      seen.add(arrowMatch[1])
+    }
+  }
+
+  return bindings
+}
+
+function appendAutoReturn(code: string): string {
+  if (hasExplicitReturn(code)) return code
+
+  const vueImports = getVueImportNames(code)
+  const bindings = collectAutoReturnBindings(code, vueImports)
+  if (bindings.length === 0) return code
+
+  return `${code}\nreturn { ${bindings.join(', ')} }`
+}
+
 function transpileTypeScript(code: string): string {
   const { code: js } = transform(code, { transforms: ['typescript'] })
   return js
 }
 
-export function compileSandboxCode(source: string): string {
-  const cleaned = stripMarkdownFence(source)
-  const withoutTypes = transpileTypeScript(cleaned)
-  const userScript = rewriteVueImports(withoutTypes)
+export function compileSandboxCode(scriptSource: string, templateSource: string): string {
+  const userScript = appendAutoReturn(
+    rewriteVueImports(transpileTypeScript(stripMarkdownFence(scriptSource))),
+  )
+
+  const template = JSON.stringify(
+    templateSource.trim() || SANDBOX_DEFAULT_TEMPLATE,
+  )
 
   const importMap = JSON.stringify({ imports: { vue: SANDBOX_VUE_RUNTIME_URL } })
-  const template = JSON.stringify(SANDBOX_DEFAULT_TEMPLATE)
 
   return `<!DOCTYPE html>
 <html lang="en">

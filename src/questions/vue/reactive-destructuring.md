@@ -12,14 +12,14 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { reactive } from 'vue'
+```javascript
+import { reactive } from "vue";
 
-const state = reactive({ count: 0, label: 'items' })
-const { count, label } = state
+const state = reactive({ count: 0, label: "items" });
+const { count, label } = state;
 
-state.count = 10
-console.log(count, label)
+state.count = 10;
+console.log(count, label);
 ```
 
 ## Options

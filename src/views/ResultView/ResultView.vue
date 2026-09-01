@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuiz } from '../composables/useQuiz'
+import { useQuiz } from '@/composables/useQuiz'
+import UPageContainer from '@ui/UPageContainer/UPageContainer.vue'
+import UCard from '@ui/UCard/UCard.vue'
+import UButton from '@ui/UButton/UButton.vue'
 
 const props = defineProps<{
   categoryId: string
@@ -65,10 +68,8 @@ function handleHome() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
-    <div
-      class="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-12"
-    >
+  <UPageContainer max-width="2xl">
+    <UCard padding="lg" class="text-center sm:p-12">
       <p class="mb-2 text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
         {{ currentCategory?.name }} — Results
       </p>
@@ -125,21 +126,13 @@ function handleHome() {
       </p>
 
       <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
-        <button
-          type="button"
-          class="rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 dark:focus-visible:ring-offset-slate-800"
-          @click="handleTryAgain"
-        >
+        <UButton size="lg" @click="handleTryAgain">
           Try Again
-        </button>
-        <button
-          type="button"
-          class="rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-800"
-          @click="handleHome"
-        >
+        </UButton>
+        <UButton variant="secondary" size="lg" @click="handleHome">
           Back to Categories
-        </button>
+        </UButton>
       </div>
-    </div>
-  </div>
+    </UCard>
+  </UPageContainer>
 </template>

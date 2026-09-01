@@ -12,14 +12,14 @@ What will this code log?
 
 ## Code
 
-```typescript
-import { ref, unref } from 'vue'
+```javascript
+import { ref, unref } from "vue";
 
-const a = ref(42)
-const b = 100
+const a = ref(42);
+const b = 100;
 
-console.log(unref(a))
-console.log(unref(b))
+console.log(unref(a));
+console.log(unref(b));
 ```
 
 ## Options
