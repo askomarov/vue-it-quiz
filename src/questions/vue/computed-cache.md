@@ -8,7 +8,7 @@ tags: [reactivity, computed-cache]
 
 ## Question
 
-What will this code log?
+How many times will `computed ran` be logged?
 
 ## Code
 
@@ -31,17 +31,17 @@ console.log(fullName.value);
 
 ## Options
 
-- computed ran, computed ran, computed ran
-- computed ran, (no log), computed ran
-- computed ran, computed ran, (no log)
-- (no log), computed ran, computed ran
+- 1
+- 2
+- 3
+- 4
 
 ## Answer
 
-computed ran, (no log), computed ran
+2
 
 ## Explanation
 
-Computed refs cache their result. The first access evaluates and logs `computed ran`. The second access returns the cached value without re-evaluating. After `firstName` changes, the cache is invalidated, so the third access re-evaluates and logs again. This is why computeds are more efficient than plain methods.
+`fullName.value` is read three times, but the computed getter runs only when the cache is empty or invalidated. First read evaluates and logs `computed ran`. Second read returns the cached result — no getter, no log. After `firstName` changes, the cache is invalidated; the third read evaluates again and logs once more. The outer `console.log(fullName.value)` calls still print `John Doe` / `Jane Doe` each time; they are separate from the getter log.
 
 See: [Computed Properties](https://vuejs.org/guide/essentials/computed.html)
