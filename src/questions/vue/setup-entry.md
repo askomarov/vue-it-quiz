@@ -3,26 +3,39 @@ category: Vue 3
 description: Composition API, reactivity, TypeScript integration, and internals
 icon: layout
 difficulty: easy
-tags: [composition-api, setup]
+tags: [composition-api, script-setup]
 ---
 
 ## Question
 
-What does Vue compile a `<script setup>` block into?
+In `<script setup>`, how do you expose a variable to the template?
+
+## Code
+
+```vue
+<script setup>
+const count = ref(0)
+// How does the template get access to count?
+</script>
+
+<template>
+  <button @click="count++">{{ count }}</button>
+</template>
+```
 
 ## Options
 
-- A setup() function (same as explicit Composition API)
-- A created() lifecycle hook
-- A beforeCreate() lifecycle hook
-- A mounted() lifecycle hook
+- Return it from setup: `return { count }`
+- Put it on `this`: `this.count = count`
+- Nothing — top-level bindings are auto-exposed
+- Call `defineExpose({ count })`
 
 ## Answer
 
-A setup() function (same as explicit Composition API)
+Nothing — top-level bindings are auto-exposed
 
 ## Explanation
 
-You never write `setup()` yourself in `<script setup>` — the compiler transforms the entire block into a `setup()` function that runs once per component instance, before the component is created. Top-level bindings become local variables returned to the template.
+In `<script setup>`, every top-level binding (refs, functions, imports) is automatically available in the template — no `return` needed. `defineExpose()` is only for exposing things to a parent via a template ref, not for the component's own template.
 
-See: [Composition API — setup()](https://vuejs.org/api/composition-api-setup.html#setup)
+See: [`<script setup>`](https://vuejs.org/api/sfc-script-setup.html)

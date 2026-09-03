@@ -8,36 +8,36 @@ tags: [shallowRef, reactivity]
 
 ## Question
 
-What will this code log?
+How many times does the watcher fire, and which mutation causes it?
 
 ## Code
 
-```javascript
-import { shallowRef, watch } from "vue";
+```typescript
+import { shallowRef, watch } from 'vue'
 
-const state = shallowRef({ count: 0 });
+const state = shallowRef({ count: 0 })
 
 watch(state, () => {
-  console.log("watcher triggered");
-});
+  console.log('watcher triggered')
+})
 
-state.value.count = 1;
-state.value = { count: 2 };
+state.value.count = 1   // A
+state.value = { count: 2 } // B
 ```
 
 ## Options
 
-- watcher triggered, watcher triggered
-- watcher triggered
-- Nothing is logged
-- watcher triggered, then watcher triggered again
+- Twice — both A and B trigger it
+- Once — only A (`state.value.count = 1`)
+- Once — only B (`state.value = { count: 2 }`)
+- Never — shallowRef does not trigger watchers
 
 ## Answer
 
-watcher triggered
+Once — only B (`state.value = { count: 2 }`)
 
 ## Explanation
 
-`shallowRef()` only triggers reactivity when `.value` itself is replaced — it does not deeply track mutations to the inner object. So `state.value.count = 1` does NOT trigger the watcher. Only `state.value = { count: 2 }` (replacing the entire `.value`) triggers it once.
+`shallowRef()` only tracks replacement of `.value` itself, not deep mutations inside the held object. Mutating `state.value.count` (A) changes the data but does not notify dependents. Replacing the whole object via `state.value = { count: 2 }` (B) does — so the watcher fires once. To react to inner mutations without replacing `.value`, use `triggerRef()` or a deep `ref` / `reactive`.
 
 See: [shallowRef()](https://vuejs.org/api/reactivity-advanced.html#shallowref)

@@ -17,8 +17,7 @@ function scrollToCategories() {
     <h1
       class="text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white"
     >
-      Test your knowledge across different IT domains. Pick a category and start
-      answering questions.
+      Test your knowledge across different IT domains. Pick a category and start answering questions.
     </h1>
 
     <div class="mt-6 flex flex-wrap items-center justify-center gap-3">

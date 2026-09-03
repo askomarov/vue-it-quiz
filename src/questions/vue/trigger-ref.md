@@ -13,7 +13,7 @@ How can you force a `shallowRef`'s watcher to fire after mutating its inner obje
 ## Code
 
 ```javascript
-import { shallowRef, triggerRef } from "vue";
+import { shallowRef } from "vue";
 
 const state = shallowRef({ count: 0 });
 
